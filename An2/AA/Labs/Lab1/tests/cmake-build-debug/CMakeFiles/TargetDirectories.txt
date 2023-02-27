@@ -1,0 +1,3 @@
+D:/FMI/An2/AA/Labs/Lab1/tests/cmake-build-debug/CMakeFiles/tests.dir
+D:/FMI/An2/AA/Labs/Lab1/tests/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/FMI/An2/AA/Labs/Lab1/tests/cmake-build-debug/CMakeFiles/rebuild_cache.dir
