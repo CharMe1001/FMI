@@ -5,8 +5,9 @@
 
 import cv2
 from sympy import divisors
-from numpy import intersect1d
+from numpy import intersect1d, random
 from random import shuffle
+from scipy.ndimage import rotate
 
 photo = 'image.png'
 
@@ -24,17 +25,11 @@ if __name__ == '__main__':
     M = len(img[0])
 
     scale = min(filter(lambda x: x > 20, intersect1d(divisors(N), divisors(M))))
-    print(N // scale)
-    print(M // scale)
-
-    #for x in range(N // scale):
-    #    for y in range(M // scale):
-    #        print(x * scale, (x + 1) * scale, y * scale, (y + 1) * scale)
 
     r1 = range(N // scale)
     r2 = range(M // scale)
 
-    lst = [img[(x * scale):((x + 1) * scale), (y * scale):((y + 1) * scale)] for x in r1 for y in r2]
+    lst = [rotate(img[(x * scale):((x + 1) * scale), (y * scale):((y + 1) * scale)], angle=90 * random.randint(0, 4)) for x in r1 for y in r2]
     shuffle(lst)
 
     for i in range(N // scale):
@@ -44,5 +39,3 @@ if __name__ == '__main__':
     cv2.imshow('photo', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
