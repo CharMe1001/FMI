@@ -94,7 +94,7 @@ void get_sol(list<int> &hull, vector<pair<long long, long long>> points)
 
         ++(mn[i]);
 
-        while (*it != 0) {
+        while (it != hull.end()) {
             if (get_dist(points, i, it) < get_dist(points, i, mn[i])) {
                 mn[i] = it;
             }
@@ -123,7 +123,7 @@ void get_sol(list<int> &hull, vector<pair<long long, long long>> points)
                 continue;
             }
 
-            auto it = mn[mnind];
+            list<int>::iterator it = mn[mnind];
             if (get_dist(points, i, it) < get_dist(points, i, mn[i])) {
                 mn[i] = it;
             }

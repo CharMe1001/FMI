@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/FMI/An2/AA/Labs/Lab1/tests/cmake-build-debug",
-		"source" : "D:/FMI/An2/AA/Labs/Lab1/tests"
+		"build" : "C:/Users/stefa/FMI/An2/AA/Labs/Lab1/tests/cmake-build-debug",
+		"source" : "C:/Users/stefa/FMI/An2/AA/Labs/Lab1/tests"
 	},
 	"version" : 
 	{
