@@ -8,8 +8,6 @@ long long get_det(pair<long long, long long> p, pair<long long, long long> q, pa
 
 void get_hull(list<int> &hull, vector<pair<long long, long long>> &points)
 {
-    sort(points.begin(), points.end());
-
     hull.push_back(0);
     hull.push_back(1);
 
@@ -140,10 +138,18 @@ int main() {
     int n;
     cin >> n;
 
-    vector<pair<long long, long long>> points(n);
-    for (auto &pt: points) {
-        cin >> pt.first >> pt.second;
+    vector<pair<long long, long long>> points;
+    map<pair<long long, long long>, int> individuals;
+    for (int i = 0; i < n; ++i) {
+        int x, y;
+        cin >> x >> y;
+        individuals[make_pair(x, y)]++;
     }
+
+    for (auto it:individuals) {
+        points.push_back(it.first);
+    }
+    n = points.size();
 
     list<int> hull;
     get_hull(hull, points);
@@ -151,7 +157,14 @@ int main() {
     get_sol(hull, points);
 
     for (auto pt:hull) {
-        cout << points[pt].first << " " << points[pt].second << "\n";
+        if (!individuals[points[pt]]) {
+            cout << points[pt].first << " " << points[pt].second << "\n";
+        }
+
+        for (int i = 0; i < individuals[points[pt]]; ++i) {
+            cout << points[pt].first << " " << points[pt].second << "\n";
+        }
+        individuals[points[pt]] = 0;
     }
 
     return 0;

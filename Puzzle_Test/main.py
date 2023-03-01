@@ -3,12 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-import cv2
-from sympy import divisors
-from numpy import intersect1d, random
-from random import shuffle
-from scipy.ndimage import rotate
-from puzzle import *
+from puzzle import Puzzle
 
 photo = 'image.png'
 
