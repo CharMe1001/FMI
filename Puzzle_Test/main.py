@@ -11,4 +11,6 @@ photo = 'image.png'
 if __name__ == '__main__':
     puzzle = Puzzle(photo)
 
+    puzzle.solve()
+
     puzzle.show('shuffled')

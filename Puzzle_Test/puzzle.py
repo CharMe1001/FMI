@@ -5,6 +5,7 @@ from sympy import divisors
 import numpy as np
 from random import shuffle
 from scipy.ndimage import rotate
+from graph import Graph
 
 
 @dataclass
@@ -12,12 +13,12 @@ class PieceEdge:
     def __init__(self, data):
         gradientRight = np.array(data[:, 1]) - np.array(data[:, 0])
         self.meanGradientRight = np.array([np.mean(gradientRight[:, 0]), np.mean(gradientRight[:, 1]), np.mean(gradientRight[:, 2])])
-        self.covarianceMatrixRight = np.cov(np.transpose(gradientRight))
+        self.covarianceMatrixRight = np.cov(np.transpose(np.concatenate((gradientRight, np.array([[0, 0, 0], [1, 1, 1], [-1, -1, -1], [0, 0, 1], [0, 1, 0], [1, 0, 0], [-1, 0, 0], [0, -1, 0], [0, 0, -1]])))))
 
         p = len(data)
         gradientLeft = np.array(data[:, p - 1]) - np.array(data[:, p - 2])
         self.meanGradientLeft = np.array([np.mean(gradientLeft[:, 0]), np.mean(gradientLeft[:, 1]), np.mean(gradientLeft[:, 2])])
-        self.covarianceMatrixLeft = np.cov(np.transpose(gradientLeft))
+        self.covarianceMatrixLeft = np.cov(np.transpose(np.concatenate((gradientLeft, np.array([[0, 0, 0], [1, 1, 1], [-1, -1, -1], [0, 0, 1], [0, 1, 0], [1, 0, 0], [-1, 0, 0], [0, -1, 0], [0, 0, -1]])))))
     gradient: []
     meanGradient: []
     covarianceMatrix: []
@@ -40,10 +41,10 @@ class Piece:
     def get_dissimilarity(self, rotationSelf, piece, rotationPiece):
         mean = self.info[rotationSelf].meanGradientLeft
         if np.array_equal(self.info[rotationSelf].covarianceMatrixLeft, [[0, 0, 0], [0, 0, 0], [0, 0, 0]]):
-            return 0
+            return 0.00001
         inverseCov = np.linalg.inv(self.info[rotationSelf].covarianceMatrixLeft)
 
-        return sum([np.matmul(np.matmul((np.array(x) - mean), inverseCov), np.transpose(np.array(x) - mean)) for x in self.get_gradient(rotationSelf, piece, rotationPiece)])
+        return max(sum([np.matmul(np.matmul((np.array(x) - mean), inverseCov), np.transpose(np.array(x) - mean)) for x in self.get_gradient(rotationSelf, piece, rotationPiece)]), 0.00001)
 
 
 class Puzzle:
@@ -62,9 +63,10 @@ class Puzzle:
             self.pieces[i].row = i // self.M
             self.pieces[i].column = i % self.M
 
-    def show(self, title='photo'):
-        print(sorted([self.pieces[0].get_dissimilarity(0, x, 0) for x in self.pieces]))
+    def solve(self):
+        graph = Graph(self)
 
+    def show(self, title='photo'):
         img = np.uint8(np.array([[[0, 0, 0]] * self.M * self.P] * self.N * self.P))
         for i in range(self.N):
             for j in range(self.M):
