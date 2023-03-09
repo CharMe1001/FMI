@@ -1,0 +1,3 @@
+[submodule "An2/FLP/Labs/MiniHaskell"]
+	path = An2/FLP/Labs/MiniHaskell
+	url = https://github.com/CharMe1001/MiniHaskell.git

@@ -97,5 +97,104 @@ string (x:xs) =
         return ([c] ++ y)
 
 
+cifra :: Parser Int
+cifra = Parser go
+    where
+        go [] = []
+        go (x:xs)
+            | isDigit x = [(digitToInt x, xs)]
+            | otherwise = []
+
+
+naiveNaturalHelper :: Int -> Parser Int
+naiveNaturalHelper x = do
+    c <- cifra
+    return (x + c) <|> naiveNaturalHelper ((x + c) * 10)
+
+
 naiveNatural :: Parser Int
-naiveNatural =
+naiveNatural = naiveNaturalHelper 0
+
+
+whiteSpace :: Parser ()
+whiteSpace = do
+    x <- many space
+    return ()
+
+
+nat :: Parser Int
+nat = do
+    c <- some cifra
+    return (foldl (\b a -> b * 10 + a) 0 c)
+
+
+lexeme :: Parser a -> Parser a
+lexeme pa = do
+    lex <- pa
+    trash <- many space
+    return lex
+
+
+natural :: Parser Int
+natural = lexeme nat
+
+
+symbol :: String -> Parser String
+symbol word = lexeme (string word)
+
+
+reserved :: String -> Parser ()
+reserved word = do
+    x <- symbol word
+    return ()
+
+
+comma :: Parser ()
+comma = reserved ","
+
+
+stopper :: Char -> Parser String
+stopper s = do
+    c <- anychar
+    if c == s then return ""
+    else do
+        y <- stopper s
+        return (c : y)
+
+
+parens :: Parser String
+parens = do
+    char '('
+    content <- stopper ')'
+    many space
+    return content
+
+
+brackets :: Parser String
+brackets = do
+    char '['
+    content <- stopper ']'
+    many space
+    return content
+
+
+commaSep1 :: Parser a -> Parser [a]
+commaSep1 pa = do
+    x <- pa
+    xs <- many (comma *> pa)
+    return (x : xs)
+
+
+commaSep :: Parser a -> Parser [a]
+commaSep pa = Parser (\input -> [([], input)]) <|> (commaSep1 pa)
+
+
+ident :: Parser Char -> Parser Char -> Parser String
+ident identStart identLitera = do
+    x <- identStart
+    xs <- many identLitera
+    return (x : xs)
+
+
+identifier :: Parser Char -> Parser Char -> Parser String
+identifier identStart identLitera = lexeme (ident identStart identLitera)
