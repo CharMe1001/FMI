@@ -5,11 +5,12 @@
 
 from puzzle import Puzzle
 
-photo = 'image.png'
+photo = 'shuffled.png'
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     puzzle = Puzzle(photo)
+    #puzzle.save('shuffled.png')
 
     puzzle.solve()
 

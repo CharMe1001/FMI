@@ -40,7 +40,7 @@ class Piece:
 
         gradient = self.get_gradient(rotationSelf, piece, rotationPiece)
 
-        return max(sum([(np.array(x) - mean) @ inverseCov @ np.atleast_2d(np.array(x) - mean).T for x in gradient]), 0.00001)
+        return max(sum([(np.array(x) - mean) @ inverseCov @ np.atleast_2d(np.array(x) - mean).T for x in gradient])[0], 0.00001)
 
     def get_dissimilarity_right(self, rotationSelf, piece, rotationPiece):
         mean = self.info[rotationSelf].meanGradientRight
@@ -48,7 +48,7 @@ class Piece:
 
         gradient = np.dot(-1, np.array(piece.get_gradient(rotationPiece, self, rotationSelf)))
 
-        return max(sum([(np.array(x) - mean) @ inverseCov @ np.transpose(np.array(x) - mean) for x in gradient]), 0.00001)
+        return max(sum([(np.array(x) - mean) @ inverseCov @ np.atleast_2d(np.array(x) - mean).T for x in gradient])[0], 0.00001)
 
 
 class Puzzle:
@@ -60,9 +60,9 @@ class Puzzle:
         self.P = min(filter(lambda x: x > 20, np.intersect1d(divisors(n), divisors(m))))
         self.N, self.M = n // self.P, m // self.P
 
-        #self.pieces = [Piece(img[x * self.P:(x + 1) * self.P, y * self.P:(y + 1) * self.P], x, y) for x in range(self.N) for y in range(self.M)]
-        self.pieces = [Piece(np.rot90(img[x * self.P:(x + 1) * self.P, y * self.P:(y + 1) * self.P], np.random.randint(0, 4)), x, y) for x in range(self.N) for y in range(self.M)]
-        shuffle(self.pieces)
+        self.pieces = [Piece(img[x * self.P:(x + 1) * self.P, y * self.P:(y + 1) * self.P], x, y) for x in range(self.N) for y in range(self.M)]
+        #self.pieces = [Piece(np.rot90(img[x * self.P:(x + 1) * self.P, y * self.P:(y + 1) * self.P], np.random.randint(0, 4)), x, y) for x in range(self.N) for y in range(self.M)]
+        #shuffle(self.pieces)
 
         for i in range(len(self.pieces)):
             self.pieces[i].row = i // self.M
@@ -70,7 +70,8 @@ class Puzzle:
 
     def solve(self):
         graph = Graph(self)
-        self.pieces = [np.rot90(self.pieces[graph.edges[0][0]].data, graph.edges[0][2]), np.rot90(self.pieces[graph.edges[0][1]].data, graph.edges[0][3])]
+        print(np.array(list(filter(lambda x: x[0] == 75 and x[1] == 20, graph.edges))))
+        #self.pieces = [np.rot90(self.pieces[graph.edges[0][0]].data, graph.edges[0][2]), np.rot90(self.pieces[graph.edges[0][1]].data, graph.edges[0][3])]
 
     def save(self, name='solved.png'):
         img = np.uint8(np.array([[[0, 0, 0]] * self.M * self.P] * self.N * self.P))

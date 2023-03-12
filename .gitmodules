@@ -1,3 +1,6 @@
 [submodule "An2/FLP/Labs/MiniHaskell"]
 	path = An2/FLP/Labs/MiniHaskell
 	url = https://github.com/CharMe1001/MiniHaskell.git
+[submodule "An2/MDS/MDS-GSketch"]
+	path = An2/MDS/MDS-GSketch
+	url = https://github.com/CharMe1001/MDS-GSketch.git

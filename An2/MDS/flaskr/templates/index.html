@@ -1,0 +1,57 @@
+<!doctype html>
+<title> Flask application </title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
+
+<body>
+	<p> Hello, world! </p>
+
+	<form id="joinRoom" onsubmit="joinRoom(); return false;">
+		<label for="room">Room: </label>
+		<input type="text" id="room">
+
+		<button type="submit">Join</button>
+	</form>
+
+	<form id="msgBox" onsubmit="sendMessage(); return false;">
+		<label for="msg">Message: </label>
+		<input type="text" id="msg">
+
+		<button type="submit">Submit</button>
+	</form>
+
+	<div id="chat">
+
+	</div>
+</body>
+
+<script type="text/javascript" charset="utf-8">
+	const socket = io()
+
+	socket.on('receive', function(msg) {
+		var div = document.getElementById('chat')
+
+		var p = document.createElement('p')
+		p.innerHTML = msg
+		div.append(p)
+
+	})
+
+	function sendMessage() {
+		const msg = document.getElementById('msg').value
+		socket.emit('receive', msg)
+
+		return false
+	}
+
+	function joinRoom() {
+		const div = document.getElementById('chat')
+		div.replaceChildren()
+		const room = document.getElementById('room').value
+		socket.emit('joinRoom', room)
+
+		return false
+	}
+
+</script>
